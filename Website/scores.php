@@ -10,6 +10,7 @@
         <a href="index.php">Archer Info</a>
         <a href="scores.php">Scores</a>
         <a href="rounds.php">Rounds</a>
+        <a href="category.php">Category</a>
       </nav>
       <!-- Archer Information Form -->
       <div>
