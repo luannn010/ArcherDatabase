@@ -18,6 +18,8 @@
 
 
         <?php
+
+
        include ('dbconnect.php');
 
        function getRounds() {
@@ -28,7 +30,7 @@
     
         if ($result->num_rows > 0) {
            
-            echo "<select name='roundId'>";
+            echo "<select name='RoundName'>";
             while($row = $result->fetch_assoc()) {
                 echo "<option value='".$row['RoundName']."'>".$row['RoundName']."</option>";
             }
@@ -41,12 +43,10 @@
         $conn->close();
     }
     
-    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['selectRound'])) {
-        $selectedRound = $_POST['roundId'];
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['RoundName'])) {
+        $selectedRound = $_POST['RoundName'];
         // Fetch details of the selected round and display it for editing
     }
- ?>
- <?php
     function getCompetition() {
         $conn = getDBConnection();
         
@@ -56,7 +56,7 @@
 
         if ($result->num_rows > 0) {
            
-            echo "<select name='Competition'>";
+            echo "<select name='CompetitionID'>";
             while($row = $result->fetch_assoc()) {
                 echo "<option value='".$row['CompetitionID']."'>".$row['CompetitionName']."</option>";
             }
@@ -64,12 +64,10 @@
     }
     $conn->close();
 }
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['selectComp'])) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['CompetitionID'])) {
     $selectedComp = $_POST['CompetitionID'];
 }
 
- ?>
- <?php
     function getArcherName() {
         $conn = getDBConnection();
         
@@ -91,8 +89,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ArcherID'])) {
     $selectedName = $_POST['ArcherID'];
 }
 
- ?>
-  <?php
     function getEquipment() {
         $conn = getDBConnection();
         
@@ -103,7 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ArcherID'])) {
 
         if ($result->num_rows > 0) {
            
-            echo "<select name='Equipment'>";
+            echo "<select name='DefaultEquipment'>";
             while($row = $result->fetch_assoc()) {
                 echo "<option value='".$row['DefaultEquipment']."'>".$row['DefaultEquipment']."</option>";
             }
@@ -115,8 +111,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['DefaultEquipment'])) {
     $selectedEquipment = $_POST['DefaultEquipment'];
 }
 
- ?>
-   <?php
     function getClass() {
         $conn = getDBConnection();
         
@@ -137,43 +131,64 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['DefaultEquipment'])) {
 }
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Class'])) {
     $selectedClass = $_POST['Class'];
-}
 
- ?>
- <?php
-    function getYears() {
-        // Generate options for years
-        $options = "";
-        $currentYear = date("Y");
-        $startYear = $currentYear - 50; // Adjust the range as needed
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submitCategory'])) {
+        $conn = getDBConnection();
+        $selectedYear = $_POST['Year'];
         
-        for ($year = $currentYear; $year >= $startYear; $year--) {
-            $options .= "<option value='$year'>$year</option>";
+        // Insert the data into the Category table
+        $sql = "INSERT INTO Category (ArcherID, CompetitionID, RoundName, Class, Equipment, RegisterYear) VALUES ('$selectedName', '$selectedComp', '$selectedRound', '$selectedClass', '$selectedEquipment', '$selectedYear')";
+        
+        if ($conn->query($sql) === TRUE) {
+            echo "Category added successfully!";
+        } else {
+            echo "Error: " . $sql . "<br>" . $conn->error;
         }
         
-        return $options;
+        $conn->close();
     }
+    
+}
+
+function getYears() {
+    // Generate options for years
+    $options = "";
+    $currentYear = date("Y");
+    $startYear = 1980; // Set the start year
+    
+    for ($year = $currentYear; $year >= $startYear; $year--) {
+        $options .= "<option value='$year'>$year</option>";
+    }
+    
+    echo "<select name='Year'>$options</select>";
+}
+
+    
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Year'])) {
         $selectedYear = $_POST['Year'];
     }
 
 
  ?>
+ 
         <div>
             <h2>Add Category</h2>
             <form method = "post" action="category.php">
                 <lable for="RoundName">Round name:</lable>
-                <?php echo getRounds();?>
+                <?php echo getRounds();?><br>
                 <lable for="Competition">Competition:</lable>
-                <?php echo getCompetition();?>
+                <?php echo getCompetition();?><br>
                 <lable for="ArcherInfo">Archer Name:</lable>
-                <?php echo getArcherName();?>
+                <?php echo getArcherName();?><br>
                 <lable for="Equipment">Equipment:</lable>
-                <?php echo getEquipment();?>
+                <?php echo getEquipment();?><br>
                 <lable for="Class">Class:</lable>
-                <?php echo getClass();?>
+                <?php echo getClass();?><br>
                 <label for="Year">Year:</label>
-                <?php echo getYears(); ?>
+                <?php echo getYears(); ?><br>
+                <input type="submit" name="submitCategory" value="Add Category">
+            </form>
                 
 
             <!-- Other content here -->
