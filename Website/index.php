@@ -28,7 +28,7 @@
         <option value="F">Female</option>
       </select><br>
       Date of Birth: <input type="date" name="dob"><br>
-      <input type="submit" value="Submit">
+      <input type="submit" name="add" value="Submit">
     </form>
   </div>
   <h2>Update Archer Information</h2>
@@ -55,7 +55,7 @@
     $conn->close();
   }
 // Check if form is submitted
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST"&& isset($_POST["add"])) {
   $firstName = $_POST["firstName"];
   $lastName = $_POST["lastName"];
   $gender = $_POST["gender"];

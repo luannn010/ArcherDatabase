@@ -14,6 +14,14 @@
 
     <?php
     include('script/function.php');
+    $selectedCategoryId = '';
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
+        if (isset($_POST['selectedCategoryId'])) {
+            $selectedCategoryId = $_POST['selectedCategoryId'];
+            echo $selectedCategoryId; // Echo the selected category ID
+        }
+    }
     ?>
 
     <div>
