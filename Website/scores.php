@@ -13,6 +13,61 @@
         <a href="category.php">Category</a>
       </nav>
       <!-- Archer Information Form -->
+      <?php
+    function getRoundsData($roundName){
+      $conn = getDBConnection();
+
+// Fetch data from table
+$sql = "SELECT * FROM Rounds WHERE RoundName = '$roundName'";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    // Fetch data and assign values to variables
+    $row = $result->fetch_assoc();
+    $roundName = $row['RoundName'];
+    $arrows10m = $row['Arrows10m'];
+    $arrows20m = $row['Arrows20m'];
+    $arrows30m = $row['Arrows30m'];
+    $arrows40m = $row['Arrows40m'];
+    $arrows50m = $row['Arrows50m'];
+    $arrows60m = $row['Arrows60m'];
+    $arrows70m = $row['Arrows70m'];
+    $arrows90m = $row['Arrows90m'];
+    
+    // Close connection
+    $conn->close();
+
+    // Return the variables as an array
+    return [
+        'roundName' => $roundName,
+        'arrows10m' => $arrows10m,
+        'arrows20m' => $arrows20m,
+        'arrows30m' => $arrows30m,
+        'arrows40m' => $arrows40m,
+        'arrows50m' => $arrows50m,
+        'arrows60m' => $arrows60m,
+        'arrows70m' => $arrows70m,
+        'arrows90m' => $arrows90m
+    ];
+    } else {
+    // Close connection
+    $conn->close();
+
+    // Return null if no data found
+    return null;
+}
+}
+    
+    ?>
+
+
+
+
+
+
+
+
+
       <div>
         <h2>Archer Information</h2>
         <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
