@@ -54,6 +54,15 @@
     $stmt->close();
     $conn->close();
   }
+// Check if form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  $firstName = $_POST["firstName"];
+  $lastName = $_POST["lastName"];
+  $gender = $_POST["gender"];
+  $dob = $_POST["dob"];
+  
+  addArcherInfo($firstName, $lastName, $gender, $dob);
+}
 
   function displayArcherInfo() {
     $conn = getDBConnection();

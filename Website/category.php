@@ -18,8 +18,6 @@
 
 
         <?php
-
-
        include ('dbconnect.php');
 
        function getRounds() {
@@ -47,6 +45,8 @@
         $selectedRound = $_POST['RoundName'];
         // Fetch details of the selected round and display it for editing
     }
+ ?>
+ <?php
     function getCompetition() {
         $conn = getDBConnection();
         
@@ -68,6 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['CompetitionID'])) {
     $selectedComp = $_POST['CompetitionID'];
 }
 
+
     function getArcherName() {
         $conn = getDBConnection();
         
@@ -79,7 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['CompetitionID'])) {
            
             echo "<select name='ArcherID'>";
             while($row = $result->fetch_assoc()) {
-                echo "<option value='".$row['ArcherID']."'>ID: ".$row['ArcherID']." ".$row['FirstName']." ".$row['LastName']."</option>";
+                echo "<option value='".$row['ArcherID']."'> ".$row['FirstName']." ".$row['LastName']."</option>";
             }
             echo "</select>";
     }
@@ -131,24 +132,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['DefaultEquipment'])) {
 }
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Class'])) {
     $selectedClass = $_POST['Class'];
-
-
-    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submitCategory'])) {
-        $conn = getDBConnection();
-        $selectedYear = $_POST['Year'];
-        
-        // Insert the data into the Category table
-        $sql = "INSERT INTO Category (ArcherID, CompetitionID, RoundName, Class, Equipment, RegisterYear) VALUES ('$selectedName', '$selectedComp', '$selectedRound', '$selectedClass', '$selectedEquipment', '$selectedYear')";
-        
-        if ($conn->query($sql) === TRUE) {
-            echo "Category added successfully!";
-        } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
-        }
-        
-        $conn->close();
-    }
-    
 }
 
 function getYears() {
@@ -169,7 +152,21 @@ function getYears() {
         $selectedYear = $_POST['Year'];
     }
 
-
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submitCategory'])) {
+        $conn = getDBConnection();
+        $selectedYear = $_POST['Year'];
+        
+        // Insert the data into the Category table
+        $sql = "INSERT INTO Category (ArcherID, CompetitionID, RoundName, Class, Equipment, RegisterYear) VALUES ('$selectedName', '$selectedComp', '$selectedRound', '$selectedClass', '$selectedEquipment', '$selectedYear')";
+        
+        if ($conn->query($sql) === TRUE) {
+            echo "Category added successfully!";
+        } else {
+            echo "Error: " . $sql . "<br>" . $conn->error;
+        }
+        
+        $conn->close();
+    }
  ?>
  
         <div>
