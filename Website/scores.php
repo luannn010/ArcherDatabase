@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,29 +14,21 @@
         <a href="category.php">Category</a>
     </nav>
 
-    <?php
-    include('script/function.php');
-    $selectedCategoryId = '';
-
-    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
-        if (isset($_POST['selectedCategoryId'])) {
-            $selectedCategoryId = $_POST['selectedCategoryId'];
-            echo $selectedCategoryId; // Echo the selected category ID
-        }
-    }
-    ?>
-
     <div>
         <h2>Archer Information</h2>
-        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-            <label for="ArcherInfo">Archer Name:</label>
-            <?php echo getArcherName(); ?><br>
+            
+            <div id="selectArcher"></div>
+      <script>
+        // Use JavaScript to populate the 'selectArcher' div with the selected round details
+        function selectArcher(details) {
+            document.getElementById('selectArcher').innerHTML = details;
+        }
+      </script>
 
-            <!-- Add a hidden input field to store the selected category ID -->
-            <input type="hidden" name="selectedCategoryId" value="<?php echo $selectedCategoryId; ?>">
-
-            <input type="submit" name="submit" value="Submit">
         </form>
+<?php
+    include("script/function.php");
+?>
     </div>
 </body>
 </html>
