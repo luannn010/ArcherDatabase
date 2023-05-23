@@ -15,7 +15,8 @@ function getRounds()
         echo "<label for='categoryId'>Archer Name</label>";
         echo "<select name='categoryId'>";
         while ($row = $result->fetch_assoc()) {
-            echo "<option value='" . $row['CategoryID'] . "'>ID: " . $row['CategoryID'] . " " . $row['FirstName'] . " " . $row['LastName'] . "</option>";
+            $archerName = $row['FirstName'] . " " . $row['LastName'];
+            echo "<option value='" . $row['CategoryID'] . "'>ID: " . $row['CategoryID'] . " " . $archerName . "</option>";
         }
         echo "</select>";
         echo "<input type='submit' name='selectCategoryId' value='Select'>";
@@ -27,10 +28,42 @@ function getRounds()
     $conn->close();
 }
 
+
+//get Archer full name
+function getArcherFullName($categoryID) {
+    $conn = getDBConnection();
+    
+    $sql = "SELECT ArcherInfo.FirstName, ArcherInfo.LastName
+            FROM ArcherInfo
+            JOIN Category ON ArcherInfo.ArcherID = Category.ArcherID
+            WHERE Category.CategoryID = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $categoryID);
+    $stmt->execute();
+    $stmt->bind_result($firstName, $lastName);
+    
+    $fullName = null;
+    if ($stmt->fetch()) {
+        $fullName = $firstName . " " . $lastName;
+    }
+    
+    $stmt->close();
+    $conn->close();
+    
+    return $fullName;
+}
+
 $selectedCategoryId = null; // Initialize the variable
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['selectCategoryId'])) {
     $selectedCategoryId = filter_input(INPUT_POST, 'categoryId', FILTER_SANITIZE_STRING);
+    $ArcherName = getArcherFullName($selectedCategoryId);
+    $RoundName = getRoundName($selectedCategoryId);
+    echo $RoundName;
+    echo $ArcherName;
+
+
+
 }
 
 function getRoundName($categoryId)
@@ -178,8 +211,8 @@ function endNoList($number) {
 }
 
 
-echo "<pre>";
-print_r($ranges);
+
+
 
 
 ?>
