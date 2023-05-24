@@ -77,23 +77,6 @@ function getArcherFullName($categoryID) {
     return $fullName;
 }
 
-$selectedCategoryId = null; // Initialize the variable
-$ranges = array(); // Declare and initialize the $ranges variable
-getRounds();
-$selectedCategoryId = null;
-$selectedEquipment = null;
-
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['selectCategoryId'])) {
-    $selectedCategoryId = filter_input(INPUT_POST, 'categoryId', FILTER_SANITIZE_STRING);
-    $selectedEquipment = filter_input(INPUT_POST, 'EquipmentDescription', FILTER_SANITIZE_STRING);
-    
-    echo "Selected Category ID: " . $selectedCategoryId . "<br>";
-    echo "Selected Equipment: " . $selectedEquipment . "<br>";
-    getDistanceForm($selectedCategoryId, $selectedEquipment);
-    echo "<script>";
-    echo "document.getElementsByTagName('form')[0].style.display = 'none';";
-    echo "</script>";
-}
 
 function getDistanceForm($categoryId, $equipment) {
     $RoundName = getRoundName($categoryId);
@@ -120,10 +103,30 @@ function getDistanceForm($categoryId, $equipment) {
     echo "</form>";
 }
 
+
+
+
+$selectedCategoryId = null;
+$ranges = array();
+getRounds();
+$selectedEquipment = null;
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['selectCategoryId'])) {
+    $selectedCategoryId = $_POST['categoryId'];
+    $selectedEquipment = $_POST['EquipmentDescription'];
+    
+    $result = getDistanceForm($selectedCategoryId, $selectedEquipment);
+    $ranges = $result['ranges'];
+    $selectedCategoryId = $result['selectedCategoryId'];
+    $selectedEquipment = $result['selectedEquipment'];
+    
+    echo "<script>";
+    echo "document.getElementsByTagName('form')[0].style.display = 'none';";
+    echo "</script>";
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['selectDistance'])) {
     $selectedDistance = $_POST['distance'];
-    $selectedCategoryId = filter_input(INPUT_POST, 'categoryId', FILTER_SANITIZE_STRING);
-    $selectedEquipment = filter_input(INPUT_POST, 'EquipmentDescription', FILTER_SANITIZE_STRING);
     
     echo "<h2>".getRoundName($selectedCategoryId)."</h2>";
     echo "<br>";
@@ -151,6 +154,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['selectDistance'])) {
     echo "document.getElementsByTagName('form')[0].style.display = 'none';";
     echo "</script>";
 }
+
+
+
 
 
 function getRoundName($categoryId)
@@ -284,14 +290,6 @@ for ($distance = 10; $distance <= 90; $distance += 10) {
             'EndNoList' => endNoList($ends)
         );
 
-    }else {
-            // Add a default entry for the distance with zero arrows
-            $ranges[$attribute] = array(
-                'Arrow' => '',
-                'FaceSize' => '',
-                'NoOfEnds' => '',
-                'EndNoList' => array()
-            );
     }
 }
  return $ranges; 
