@@ -93,23 +93,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ArcherID'])) {
     function getEquipment() {
         $conn = getDBConnection();
         
-        $sql = "SELECT DISTINCT DefaultEquipment
-        FROM DefaultEquipment";
+        $sql = "SELECT * FROM `EquipmentDescription`";
 
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
            
-            echo "<select name='DefaultEquipment'>";
+            echo "<select name='Equipment'>";
             while($row = $result->fetch_assoc()) {
-                echo "<option value='".$row['DefaultEquipment']."'>".$row['DefaultEquipment']."</option>";
+                echo "<option value='".$row['Equipment']."'>".$row['EquipmentDescription']."</option>";
             }
             echo "</select>";
     }
     $conn->close();
 }
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['DefaultEquipment'])) {
-    $selectedEquipment = $_POST['DefaultEquipment'];
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Equipment'])) {
+    $selectedEquipment = $_POST['Equipment'];
 }
 
     function getClass() {

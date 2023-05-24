@@ -81,7 +81,7 @@ CREATE TABLE EndScores(
     ScoreID INT NOT NULL AUTO_INCREMENT,
     EndNo ENUM('1','2','3','4','5','6','7','8','9','10','11','12'),
     CategoryID INT NOT NULL,
-    ScoreDateTime DATETIME,
+    Equipment VARCHAR(255),
     Distance ENUM('20m', '30m', '40m', '50m', '60m', '70m', '90m'),
     Arrow1 INT NOT NULL,
     Arrow2 INT NOT NULL,

@@ -12,12 +12,18 @@ function getRounds()
 
     if ($result->num_rows > 0) {
         echo "<form method='post' action='scores.php'>";
+
+        getEquipment();
         echo "<label for='categoryId'>Archer Name</label>";
+        
         echo "<select name='categoryId'>";
+        
         while ($row = $result->fetch_assoc()) {
             $archerName = $row['FirstName'] . " " . $row['LastName'];
             echo "<option value='" . $row['CategoryID'] . "'>ID: " . $row['CategoryID'] . " " . $archerName . "</option>";
         }
+        
+        
         echo "</select>";
         echo "<input type='submit' name='selectCategoryId' value='Select'>";
         echo "</form>";
@@ -28,6 +34,24 @@ function getRounds()
     $conn->close();
 }
 
+// Get Archer Equipment
+function getEquipment() {
+    $conn = getDBConnection();
+    
+    $sql = "SELECT * FROM `EquipmentDescription`";
+
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        echo "<lable for='Equipment'>Equipment:</lable>";
+        echo "<select name='EquipmentDescription'>";
+        while($row = $result->fetch_assoc()) {
+            echo "<option value='".$row['EquipmentDescription']."'>".$row['EquipmentDescription']."</option>";
+        }
+        echo "</select>";
+}
+$conn->close();
+}
 
 //get Archer full name
 function getArcherFullName($categoryID) {
@@ -54,17 +78,80 @@ function getArcherFullName($categoryID) {
 }
 
 $selectedCategoryId = null; // Initialize the variable
+$ranges = array(); // Declare and initialize the $ranges variable
+getRounds();
+$selectedCategoryId = null;
+$selectedEquipment = null;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['selectCategoryId'])) {
     $selectedCategoryId = filter_input(INPUT_POST, 'categoryId', FILTER_SANITIZE_STRING);
-    $ArcherName = getArcherFullName($selectedCategoryId);
-    $RoundName = getRoundName($selectedCategoryId);
-    echo $RoundName;
-    echo $ArcherName;
-
-
-
+    $selectedEquipment = filter_input(INPUT_POST, 'EquipmentDescription', FILTER_SANITIZE_STRING);
+    
+    echo "Selected Category ID: " . $selectedCategoryId . "<br>";
+    echo "Selected Equipment: " . $selectedEquipment . "<br>";
+    getDistanceForm($selectedCategoryId, $selectedEquipment);
+    echo "<script>";
+    echo "document.getElementsByTagName('form')[0].style.display = 'none';";
+    echo "</script>";
 }
+
+function getDistanceForm($categoryId, $equipment) {
+    $RoundName = getRoundName($categoryId);
+    $ranges = getRanges($categoryId);
+    
+    echo "<h2>".$RoundName."</h2>";
+    echo "<br>";
+    echo "<h2>" . getArcherFullName($categoryId) . ", " . $equipment . "</h2>";
+    
+    // Select distance
+    echo "<form method='post'>";
+    echo "<label for='distance'>Select Distance:</label>";
+    echo "<select name='distance'>";
+    
+    // Iterate over the distances in the $ranges array
+    foreach ($ranges as $distance => $data) {
+        $targetFaceSize = $data['FaceSize'];
+        $distanceNFace = $distance . ' - Target Size: ' . $targetFaceSize;
+        echo "<option value='" . $distanceNFace . "'>" . $distanceNFace . "</option>";
+    }
+    
+    echo "</select>";
+    echo "<input type='submit' name='selectDistance' value='Select Distance'>";
+    echo "</form>";
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['selectDistance'])) {
+    $selectedDistance = $_POST['distance'];
+    $selectedCategoryId = filter_input(INPUT_POST, 'categoryId', FILTER_SANITIZE_STRING);
+    $selectedEquipment = filter_input(INPUT_POST, 'EquipmentDescription', FILTER_SANITIZE_STRING);
+    
+    echo "<h2>".getRoundName($selectedCategoryId)."</h2>";
+    echo "<br>";
+    echo "<h2>" . getArcherFullName($selectedCategoryId) . ", " . $selectedEquipment . "</h2>";
+    echo "<h2>Selected Distance: " . $selectedDistance . "</h2>";
+    
+    // Close the first form
+    echo "</form>";
+    
+    // Create form for selecting End No List
+    echo "<form method='post'>";
+    echo "<label for='endNoList'>Select End No:</label>";
+    echo "<select name='endNoList'>";
+    
+    $endNumbers = endNoList($ranges[$selectedDistance]['NoOfEnds']);
+    foreach ($endNumbers as $endNo) {
+        echo "<option value='" . $endNo . "'>" . $endNo . "</option>";
+    }
+    
+    echo "</select>";
+    echo "<input type='submit' name='selectEndNo' value='Select End No'>";
+    echo "</form>";
+    
+    echo "<script>";
+    echo "document.getElementsByTagName('form')[0].style.display = 'none';";
+    echo "</script>";
+}
+
 
 function getRoundName($categoryId)
 {
@@ -163,10 +250,11 @@ function splitArrows($x) {
     return $arrow; // Return an array containing the arrow and char
 }
 // Call getRounds and displayRounds
-getRounds();
 
-$roundName = getRoundName($selectedCategoryId);
 
+
+function getRanges($categoryId){
+    $roundName = getRoundName($categoryId);
 // Access the returned roundName and retrieve the round data
 if ($roundName) {
     $roundData = getRoundData($roundName);
@@ -192,13 +280,22 @@ for ($distance = 10; $distance <= 90; $distance += 10) {
         $ranges[$attribute] = array(
             'Arrow' => $arrows,
             'FaceSize' => $faceSize,
-            'NoOfEnds' => $ends
+            'NoOfEnds' => $ends,
+            'EndNoList' => endNoList($ends)
         );
+
+    }else {
+            // Add a default entry for the distance with zero arrows
+            $ranges[$attribute] = array(
+                'Arrow' => '',
+                'FaceSize' => '',
+                'NoOfEnds' => '',
+                'EndNoList' => array()
+            );
     }
 }
-  
- } else {
-    echo "No round name associated with the selected Category ID.";
+ return $ranges; 
+ }
 }
 function endNoList($number) {
     $Ends = array();

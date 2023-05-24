@@ -15,7 +15,7 @@
     </nav>
 
     <div>
-        <h2>Archer Information</h2>
+        <h2>Add Ends Scores</h2>
             
             <div id="selectArcher"></div>
       <script>
@@ -28,6 +28,7 @@
         </form>
 <?php
     include("script/function.php");
+    
 ?>
     </div>
 </body>
