@@ -1,0 +1,84 @@
+#buttonContainer {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 5px;
+    border: 2px solid black; /* Add a border */
+    border-radius: 8px;
+    padding: 5px;
+    max-width: 230px;
+    margin: 0 auto;
+}
+
+.score {
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 8px;
+    width: 45px;
+    height: 45px;
+    margin: 3px;
+    font-weight: bold;
+}   
+/* Score Color */
+.scoreX {background-color: yellow; color: black;}
+.score10 {background-color: yellow; color: black;}
+.score9 {background-color: yellow; color: black;}
+.score8 {background-color: red; color: black;}
+.score7 {background-color: red; color: black;}
+.score6 {background-color: blue;}
+.score5 {background-color: blue;}
+.score4 {background-color: black;}
+.score3 {background-color: black;}
+.score2 {background-color: rgb(38, 224, 237); color: black;}
+.score1 {background-color: rgb(38, 224, 237);; color: black;}
+.scoreM {background-color: rgb(38, 224, 237);; color: black;}
+.blankSquareContainer {
+    display: flex; /* Arrange the blank squares in a row */
+    justify-content: center; /* Align the squares horizontally to the center */
+    align-items: center; /* Align the squares vertically to the center */
+    margin: auto;
+}
+
+.blankSquare {
+    margin-left: 3em; /* Adjust the spacing between the squares if needed */
+    margin-right: 3em; /* Adjust the spacing between the squares if needed */
+    width: 50px;
+    height: 50px;
+    border: 1px solid black; /* Add a border */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+
+#totalContainer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    margin-right: 5em;
+    margin-left: auto;
+}
+
+#totalLabel {
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+#totalValue {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    border: 1px solid black; /* Add a border */
+    text-align: center;
+    line-height: 50px;
+    font-weight: bold;
+}
+
+#submitButton {
+    margin-top: 10px;
+}
