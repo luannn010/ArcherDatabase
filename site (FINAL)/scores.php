@@ -12,6 +12,9 @@
         <a href="scores.php">Scores</a>
         <a href="rounds.php">Rounds</a>
         <a href="category.php">Category</a>
+        <a href='classGraph.php'>Graph 1</a>
+        <a href='graphGender.php'>Graph 2</a>
+        <a href='equipmentGraph.php'>Graph 3</a>
     </nav>
 
     <div>
